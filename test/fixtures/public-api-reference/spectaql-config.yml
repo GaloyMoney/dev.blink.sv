@@ -1,0 +1,8 @@
+introspection:
+  schemaFile: ./test/fixtures/public-api-reference/schema.graphql
+
+info:
+  title: GraphQL API Reference Smoke Test
+
+servers:
+  - url: https://example.com/graphql

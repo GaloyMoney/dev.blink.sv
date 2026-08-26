@@ -17,5 +17,8 @@ jobs:
       - name: Install Dependencies
         run: nix-shell -p yarn --run "yarn install --frozen-lockfile"
 
+      - name: Test
+        run: nix-shell -p yarn --run "yarn test"
+
       - name: Test Build
         run: nix-shell -p yarn --run "yarn build"

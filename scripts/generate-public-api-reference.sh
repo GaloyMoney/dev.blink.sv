@@ -1,23 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# deps
-if ! git --version; then sudo apt-get install -y git; fi
-if ! node --version; then sudo apt-get install -y nodejs; fi
-if ! yarn --version; then sudo apt-get install -y yarn; fi
-if ! npx spectaql --version; then yarn add spectaql --non-interactive; fi
+set -euo pipefail
+
+git --version
+node --version
+yarn --version
+yarn install --frozen-lockfile
 
 mkdir -p .temp
-cd .temp || exit 1
+cd .temp
 
 # checkout blink
 if [ ! -d "blink" ]; then
   git clone https://github.com/blinkbitcoin/blink
 fi
-cd blink || exit 1
+cd blink
+git fetch origin main
+git checkout --detach origin/main
 
 # build public api reference
-npx spectaql ./../../scripts/spectaql/spectaql-config-public-api.yml \
-  -t ./../../static -f public-api-reference.html || exit 1
+../../node_modules/.bin/spectaql ../../scripts/spectaql/spectaql-config-public-api.yml \
+  -t ../../static -f public-api-reference.html
 
 # set dark mode
-sed -i 's/spectaql.min.css/spectaql.dark.css/' ./../../static/public-api-reference.html
+perl -pi -e 's/spectaql\.min\.css/spectaql.dark.css/' ../../static/public-api-reference.html
+
+# record the schema version represented by the generated reference
+node ../../scripts/public-api-reference-status.mjs \
+  core/api/src/graphql/public/schema.graphql \
+  ../../static/public-api-reference.schema.sha256 \
+  --write
