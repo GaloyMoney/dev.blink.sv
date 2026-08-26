@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-include=scripts/generate-public-api-reference.mjs --test-coverage-include=scripts/public-api-reference-status.mjs --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 scripts/*.test.mjs",
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
@@ -33,6 +34,7 @@
     "@docusaurus/types": "^3.3.2",
     "@types/react": "^18.2.70",
     "browserify": "^17.0.0",
+    "spectaql": "3.0.9",
     "typescript": "^5.4.3",
     "uglify-es": "^3.3.9"
   },
