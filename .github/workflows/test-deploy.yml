@@ -14,11 +14,26 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v7
       - uses: actions/checkout@v4
 
+      - name: Checkout Blink
+        uses: actions/checkout@v4
+        with:
+          repository: blinkbitcoin/blink
+          path: blink
+
       - name: Install Dependencies
         run: nix-shell -p yarn --run "yarn install --frozen-lockfile"
 
       - name: Test
         run: nix-shell -p yarn --run "yarn test"
+
+      - name: Test generator against the Blink schema
+        working-directory: blink
+        run: |
+          node ../scripts/generate-public-api-reference.mjs \
+            core/api/src/graphql/public/schema.graphql \
+            ../scripts/spectaql/spectaql-config-public-api.yml \
+            "$RUNNER_TEMP/public-api-reference.html" \
+            "$RUNNER_TEMP/public-api-reference.schema.sha256"
 
       - name: Test Build
         run: nix-shell -p yarn --run "yarn build"

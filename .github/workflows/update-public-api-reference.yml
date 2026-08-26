@@ -63,15 +63,11 @@ jobs:
         if: steps.schema.outputs.changed == 'true'
         working-directory: blink
         run: |
-          nix-shell -p yarn --run "../dev.blink.sv/node_modules/.bin/spectaql \
-            ../dev.blink.sv/scripts/spectaql/spectaql-config-public-api.yml \
-            -t ../dev.blink.sv/static -f public-api-reference.html"
-          perl -pi -e 's/spectaql\.min\.css/spectaql.dark.css/' \
-            ../dev.blink.sv/static/public-api-reference.html
-          node ../dev.blink.sv/scripts/public-api-reference-status.mjs \
+          node ../dev.blink.sv/scripts/generate-public-api-reference.mjs \
             core/api/src/graphql/public/schema.graphql \
+            ../dev.blink.sv/scripts/spectaql/spectaql-config-public-api.yml \
+            ../dev.blink.sv/static/public-api-reference.html \
             ../dev.blink.sv/static/public-api-reference.schema.sha256 \
-            --write
 
       - name: Build documentation site
         if: steps.schema.outputs.changed == 'true'

@@ -18,15 +18,9 @@ cd blink
 git fetch origin main
 git checkout --detach origin/main
 
-# build public api reference
-../../node_modules/.bin/spectaql ../../scripts/spectaql/spectaql-config-public-api.yml \
-  -t ../../static -f public-api-reference.html
-
-# set dark mode
-perl -pi -e 's/spectaql\.min\.css/spectaql.dark.css/' ../../static/public-api-reference.html
-
-# record the schema version represented by the generated reference
-node ../../scripts/public-api-reference-status.mjs \
+# build the public api reference and record its schema version
+node ../../scripts/generate-public-api-reference.mjs \
   core/api/src/graphql/public/schema.graphql \
+  ../../scripts/spectaql/spectaql-config-public-api.yml \
+  ../../static/public-api-reference.html \
   ../../static/public-api-reference.schema.sha256 \
-  --write
